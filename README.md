@@ -1,5 +1,5 @@
 ### Namaste to everyone 🙏
-## This is community of CSBS(computer science and buisness system) students
+## This is community of CSBS(computer science and business system) students
 ## We warm heartily welcome you and take part in usage and contribution 
 - 📰 This repo includes semester wise previous year questions
 - 📃 It also includes syllabus course wise 
