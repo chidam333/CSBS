@@ -4,8 +4,8 @@
 <br>
 
 ## Sir unit flow :-
-<li>
-  <ol>Boolean algebra ( unit 1 ) </ol>
-  <ol>Combintorics (unit 4) </ol>
-  <ol>To Be Continued......</ol>
- </li>
+<ol>
+  <li><b>Boolean algebra</b> ( unit 1 ) </li>
+  <li><b>Combintorics</b> (unit 4) </li>
+  <li><b>To Be Continued......</b></li>
+ </ol>
