@@ -1,0 +1,2 @@
+This is a text file which is supposed to be created while creating any new folder so that the folder itself is not empty here
+SEM 2 notes is the new folder we are creating
