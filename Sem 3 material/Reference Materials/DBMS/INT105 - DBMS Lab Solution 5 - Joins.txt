@@ -1,0 +1,26 @@
+1.Give an example for a Cartesian join
+  select * from pc,printer;
+2.Give an example for a Cartesian join involving 3 tables.
+  select * from pc,laptop,printer;
+3.List the name, age, skill from the worker and worker skill tables for workers whose age is greater than 30 (use equi join).
+ select a.name,a.age,b.skill from worker a,workerskill b where a.age>30 and a.name=b.name;
+4.Give an example for a non-equi join.
+select b.name,a.age,b.skill from worker a,workerskill b where a.age>35 and a.name<>b.name;
+5.List the distinct combinations of PC models whose HD capacities are same (use self join).
+6.Display the manufacturers of PC along with the details model, price (use inner join)
+  select a.maker,b.model_no,b.price from product_info a, pc b where a.model_no=b.model_no;
+7.List the laptop and pc pairs whose price is same (list the model numbers, use inner join).
+select a.model_no,b.model_no from pc1 a,laptop b where a.price=b.price;
+8.Give an example for left outer, right outer and full outer joins.
+  LEFT OUTER JOIN
+  	select a.name,a.age,b.skill from worker a,workerskill b where a.name=b.name(+);
+    select w.name,w.age,ws.skill from worker w left outer join workerskill ws on w.name=ws.name;
+  RIGHT OUTER JOIN
+	select a.name,a.age,b.skill from worker a,workerskill b where a.name(+)=b.name;
+	select w.name,w.age,ws.skill from worker w right outer join workerskill ws on w.name=ws.name;
+  FULL OUTER JOIN
+	select a.name,a.age,b.skill from worker a,workerskill b where a.name=b.name(+) union select a.name,a.age,b.skill 
+	from worker a,workerskill b where a.name=b.name(+);
+9.Give an example of how NVL function can be used effectively in outer joins.
+	select a.name,a.age,NVL(b.name,'NULL') as name from worker a, workerskill b where a.name=b.name(+);
+	select NVL(a.name,'NULL') as name,a.age,b.name from worker a,workerskill b where a.name (+)=b.name;

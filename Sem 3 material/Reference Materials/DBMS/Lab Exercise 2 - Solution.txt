@@ -1,0 +1,29 @@
+Lab Exercise - 2 Solution
+
+
+Update all the rows of the printer table, such that the price is increased by 12% for Ink Jet Printers, 14% for Dot Matrix Printers, 10% for Laser Printers.( using separate Update as well as single update statements)
+
+update printer set price=price+(.12*price) where type='INK';
+update printer set price=price+(.14*price) where type='DOT';
+update printer set price=price+(.10*price) where type='LASER';
+update printernew1 set price=decode(type,'INK',price+(0.12*price),
+'DOT',price+(0.14*price),'LASER',price+(0.10*price));
+
+Update the Laptop table to increase the price by 12.33% for only those laptops with a speed of >= 2 and manufactured by HCL or IBM.
+update laptop set price=price+(0.1233*price) where speed >=2 and model_no in(select model_no from product_info where (maker='IBM' or maker='HCL') and type='LP');
+
+Insert into Laptop table,all the rows from the PC table with the following considerations:
+a. If the model number for the PC row is PCxxx, the model number in the Laptop table should be LPxxx. (Hint : Omit the CD column)
+insert into laptopnew(model_no,speed,ram,hd,price)
+select translate(model_no,'PC','LP'),speed,ram,hd,price from pc;
+b.Keep the screen size as a constant value of 17.
+update laptopnew set screensize=17 where model_no in
+(select translate(model_no,'PC','LP') from pc);
+c.Price should be greater than 15,000.
+update laptopnew set price=price+15000 where model_no in
+(select translate(model_no,'PC','LP') from pc);
+
+
+
+
+

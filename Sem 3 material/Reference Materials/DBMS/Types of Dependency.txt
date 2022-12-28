@@ -1,0 +1,88 @@
+Dependencies/Functional Dependencies
+
+A dependency occurs in a database when information stored in the same database table uniquely determines other information stored in the same table.
+
+You can also describe this as a relationship where knowing the value of one attribute (or a set of attributes) is enough to tell you the value of another attribute (or set of attributes) in the same table.
+
+Saying that there is a dependency between attributes in a table is the same as saying that there is a functional dependency between those attributes. 
+
+If there is a dependency in a database such that attribute B is dependent upon attribute A, 
+you would write this as “A -> B”.
+
+For example, 
+
+In a table listing employee characteristics including Social Security Number (SSN) and name, it can be said that name is dependent upon SSN (or SSN -> name) because an employee's name can be uniquely determined from their SSN. However, the reverse statement (name -> SSN) is not true because more than one employee can have the same name but different SSNs.
+
+Trivial Functional Dependencies
+
+A trivial functional dependency occurs when you describe a functional dependency of an attribute on a collection of attributes that includes the original attribute.
+
+For example, “{A, B} -> B” is a trivial functional dependency, as is “{name, SSN} -> SSN”. This type of functional dependency is called trivial because it can be derived from common sense. It is obvious that if you already know the value of B, then the value of B can be uniquely determined by that knowledge.
+
+Trivial functional dependency: A trivial functional dependency is a functional dependency of an attribute on a superset of itself. 
+For example: {Employee ID, Employee Address} à {Employee Address} is trivial, here {Employee Address} is a subset of {Employee ID, Employee Address}. 
+
+Trivial: If an FD X -> Y holds where Y subset of X, then it is called a trivial FD. Trivial FDs are always hold. 
+
+Non-trivial FD : If an FD X -> Y holds where Y is not subset of X, then it is called non-trivial FD.For example:
+
+An employee table with three attributes: emp_id, emp_name, emp_address.
+The following functional dependencies are non-trivial:
+emp_id -> emp_name (emp_name is not a subset of emp_id)
+emp_id -> emp_address (emp_address is not a subset of emp_id)
+
+On the other hand, the following dependencies are trivial:
+{emp_id, emp_name} -> emp_name [emp_name is a subset of {emp_id, emp_name}]
+
+
+Full Functional Dependencies
+
+A full functional dependency occurs when you already meet the requirements for a functional dependency and the set of attributes on the left side of the functional dependency statement cannot be reduced any further. For example, “{SSN, age} -> name” is a functional dependency, but it is not a full functional dependency because you can remove age from the left side of the statement without impacting the dependency relationship.
+
+Transitive Dependencies
+
+Transitive dependencies occur when there is an indirect relationship that causes a functional dependency. For example, ”A -> C” is a transitive dependency when it is true only because both “A -> B” and “B -> C” are true.
+
+Multivalued Dependencies
+
+Multivalued dependencies occur when the presence of one or more rows in a table implies the presence of one or more other rows in that same table. For example, imagine a car company that manufactures many models of car, but always makes both red and blue colors of each model. If you have a table that contains the model name, color and year of each car the company manufactures, there is a multivalued dependency in that table. If there is a row for a certain model name and year in blue, there must also be a similar row corresponding to the red version of that same car.
+
+If you have two MVDs in a relation (several dependents and several projects for an employee), all combinations of project and dependents have to be listed.
+
+In general, in R(A,B,C) if each A values has associated with it a set of B values and a set of C values such that the B and C values are independent of each other, then A multi-determines B and A multi-determines C.
+
+Multi-valued dependencies occur in pairs.
+CAR_MODEL  ->-> MANUF_YEAR  
+CAR_MODEL   ->->  COLOR  
+
+Example: JointAppoint(facId, dept, committee) assuming a faculty member can take class to more than one department and belong to more than one committee
+
+Functional Dependency:
+Given a Relation R(A,B,C,D), Where A,B,C,D are attributes.
+
+Functional Dependencies A->BCD , BC->D .
+
+A->BCD means A functionally determines BCD.
+BC->D means BC functionally determines D.
+
+Full Functional Dependency:
+
+Given a relation R and Functional Dependency X->Y
+Y is fully functionally dependent on X and there should not be any Z->Y, Where Z is a proper subset of X.
+
+Partial Functional Dependency
+A functional dependency A -> B is said to be partial if removal of any subset of A still able to recognize B uniquely.  
+
+Partial Dependency is a form of Functional dependency that holds on a set of attributes. It is about the complete dependency of a right hand side attribute on one of the left hand side attributes.
+
+For example, in a functional dependency PQ -> R, if either P alone or Q alone can uniquely identify R, then this is said to be Partial Functional Dependency. We read this as R is partially functionally dependent on P or R is partially functionally dependent on Q.
+
+Another example: Assume the set of FDs for a relation Student as follows;
+F = {regno -> name, regno -> dob, {regno, phone} -> gender, regno -> gender}
+
+Here, in FD {regno, phone} -> gender, the attribute gender is partially dependent on regno attribute or left hand side. Here, phone is not required to identify gender uniquely.
+
+
+Transitive Dependency
+
+ Given a relation R(A,B,C,D,E)  then dependency like A-->B, B-->C   is a transitive dependency, since   A-->C is implied .

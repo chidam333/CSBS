@@ -1,0 +1,118 @@
+Procedure and Functions
+i)	Create a table called “Areas” with the following columns:
+a.	Input_Value
+b.	Circle_Area
+c.	Square_Area
+d.	Sphere_Area
+e.	Sphere_Volume
+f.	Cube_Volume
+
+Write a procedure to declare a character & constant number and do the following:
+a.	If the character is ‘R’ assuming that the constant number is a radius, calculate the area of the circle , sphere and the volume of the sphere it will form.
+b.	If the character is ‘L’ assuming that the constant number is the length of the side of a square, calculate the area of the square it will form and the volume of the cube it will form.
+c.	If the character is not ‘R’ or ‘L’ then print “ invalid choice ”.
+d.	After calculation, insert the values into the “Areas” table.
+
+create or replace procedure  area(N in number, CH in char ) as
+	Length  numeric;
+	Rad	numeric;
+	Ca	numeric;
+	Sa	numeric
+	Spa	numeric;
+	Spa	numeric;
+	Cv	numeric;
+	
+Begin
+	If CH=’R’ then
+		Rad: =N;
+		Ca:= 3.14 * Rad * Rad;
+		Spa := 4*3.14 *Rad *Rad;	
+		Spv:= 4/3*3.14 * Rad * Rad * Rad;
+		DBMS_OUTPUT.PUT_LINE(‘CIRCLE-AREA= =’|| Ca);
+		DBMS_OUTPUT.PUT_LINE(‘SPHERE-AREA= =’||Spa);
+		DBMS_OUTPUT.PUT_LINE(SPHERE-VOLUME = =’||Spv);
+		INSERT INTO AREA(INPUT,CIRCLE AREA,SPHERE_AREA,SPHERE_VOL) VALUES
+		(Rad,Ca,Spa,Spv);
+		DBMS_OUTPUT.PUT_LINE(‘Values Inserted’);
+	Else
+		If CH= ‘L’ then
+			Length := N;
+			Sa :=  Length * Length;
+			Cv := Length * Length * Length;
+			DBMS_OUTPUT.PUT_LINE(‘CIRCLE-AREA= =’|| sa);
+			DBMS_OUTPUT.PUT_LINE(‘SPHERE-AREA= =’||cv);
+			INSERT INTO AREA(INPUT,SQUARE_AREA,CUBE_VOL) VALUES
+			(Length,Sa,Cv);
+		End if;
+	End if;
+End;
+Implement the same functionality using a “Function”
+ii)	Create a table called “Constant_Values” with the following columns:
+Constant_1 (Integer)
+Constant_2 (Integer)
+Insert few rows into the “Constant_Values” table.
+Alter the table “Areas” to have the columns as follows:
+a.	Input_Value1
+b.	Input_Value2
+c.	Circle_Area
+d.	Square_Area
+e.	Cylinder_Volume
+f.	Rectangle_Area
+g.	Sphere_Area
+h.	Sphere_Volume
+i.	Cube_Volume
+Write a procedure to do the following:
+a.	Declare a cursor
+b.	Read the rows one by one into the cursor ROWTYPE variable
+c.	If both the constants have a value in that row, 
+i)	Assume them to be the length and breadth of a rectangle and calculate the area.  
+ii)	Assume them to be the radius and height of a cylinder and calculate the volume.
+iii)	Assuming the 1st value to be the radius, do as in the prior exercise
+iv)	Assuming the 1st value to be the side of the square, do as in the prior exercise
+After calculation, insert the values into the “Areas” table.  Repeat the process for all the rows in the “Constant_Values” table.  Close the cursor.
+2.Using Cursor
+declare
+CURSOR C1 is select constant1,constant2 from constant_values;
+C2 c1%rowtype;
+Length numeric;
+Breadth numeric;
+Radius numeric;
+Height numeric;
+Side numeric;
+Ra numeric;
+Cv numeric;
+Ca numeric;
+Sa numeric;
+Sv numeric;
+Sqa numeric;
+Cyv numeric;
+begin
+OPEN C1
+LOOP
+EXIT WHEN C1%NOTFOUND;
+FETCH C1 INTO C2;
+if (C2.constant1 >0 and C2.constant2 >0) then
+Length := C2.constant1;
+Radius :=C2.Constant1;
+Breadth :=C2.constant2;
+Height :=C2.constnat2;
+Side :=C2.constant2;
+Ra:=2*Length *Breadth;
+Cyv :=3.14 * Radius *Radius * Height;
+Ca :=3.14 * Radius * Radius;
+Sa :=4*3.14*Radius * Radius;
+Sv :=3.14 * Radius * Radius *Radius * 4/3;
+Sqa := side *side *0.5;
+Cv := Side * Side *Side;
+end If;
+insert into
+areacv(circle_area,sphere_area,sphere_volume,square_area,Cube_volume,
+rectangle_area,Cylinder_volume,input_value1,input_value2) values
+(Ca,Sa,Sv,Sqa,Cv,Ra,Cyv,Radius,Side);
+END LOOP;
+CLOSE C1;
+DBMS_OUTPUT.PUT_LINE(&#39;Inserted&#39;);
+end;
+
+
+ 

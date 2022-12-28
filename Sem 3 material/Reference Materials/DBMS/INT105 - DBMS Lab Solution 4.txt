@@ -1,0 +1,41 @@
+1.Find the difference between the highest and lowest price from laptop.
+  select max(price), min(price), max(price)-min(price) as diff from laptop;
+2.Find the Standard deviation and Variance of price in PC table.
+  select STDDEV(price) , VARIANCE(price) from pc;
+3.Use a specific command to get the data in the following manner:
+	Workername           Age
+	JACK ADAMS         	--21
+	MEENA KUMARI   		--31
+    Select name as workername,lpad(age,4,'--') as age from worker;
+4.a.Update the PC table such that, the price for all PC models is increased by 12.33%. 
+	update pc set price=price*1.1233;
+  b.Display the PC model in lowercase and price rounded to the hundredths for all the PCs.
+	select lower(model_no) as model,substr(price,1,3) as price from pc;
+    select lower(model_no) as model,trunc(price/100) as price from pc;
+5.List the names in the ascending order of the length of names from WORKER table.
+	select name, length(name) as length from worker order by length(name);
+6.List the phone number (eliminate area code like 91-0437) of all employees from WORKERSKILL table.
+	select substr(phone,9,5) from workerskill;
+7.Find the location of letter ‘A’ in the employee name of WORKERSKILL table.
+ 	(Hint: use INSTR ( )).
+  select instr(name,'A') from workerskill;
+8.Use SOUNDEX ( ) function on WORKERSKILL table to find a record of column city sound like ‘ Sidney ’.
+	select city from workerskill where soundex(city)=soundex('SIDNEY');
+9.Display the current date/time in the following formats:
+	a.Sep-2006
+	b.September 12 2006
+	c.12-09-06 12:11:10
+	select to_char(sysdate,'dd-mon-yyyy') as "DATE" from dual;
+	select to_char(sysdate,' month dd yyyy') as "DATE" from dual;
+	select to_char(sysdate,'dd-mm-yy hh:mi:ss') as "DATE" from dual;
+10.Give examples for replace, decode and translate functions.
+	1.select replace(name,'ICK','EAN') as "NAME" from workerskill;
+	2.select maker,model_no,decode(type,'LP','LAPTOP','PR','PRINTER',
+    'PC','PERSONAL COMPUTER') as "TYPE"  from product_info;
+	3.select translate(name,'IC','#*') as "NAME" from worker;
+11.Display the printer information whose price is equal to any one of the printer manufactured by ‘IBM’.
+select * from printer where price= any(select price from printer where model_no in(select model_no from product_info where maker='IBM'));
+12.List the laptop details whose screen size is equal to the screen size of ‘lp114’.
+	select * from laptop where screensize=(select screensize from laptop where model_no='LP114');
+
+

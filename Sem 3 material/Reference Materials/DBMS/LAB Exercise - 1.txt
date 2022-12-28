@@ -1,0 +1,406 @@
+1.Alter the table product_info to make the type column NOT NULL.
+SQL> desc product_info;
+ N
+ame                                      Null?    Type
+ ----------------------------------------- -------- ------------------------
+ MAKER                                              VARCHAR2(10)
+ MODEL_NO                                           VARCHAR2(10)
+ TYPE                                               VARCHAR2(10)
+
+SQL>alter table product_info modify(type varchar2(10) not null);
+
+Table altered.
+
+SQL> desc product_info;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ------------------------
+ MAKER                                              VARCHAR2(10)
+ MODEL_NO                                           VARCHAR2(10)
+ TYPE                                      NOT NULL VARCHAR2(10)
+
+****************************************************************
+2.Alter the table pc to have a default speed of 2.
+
+SQL> select * from pc;
+
+MODEL_NO        SPEED        RAM         HD         CD      PRICE
+---------- ---------- ---------- ---------- ---------- ----------
+PC112               2        256         60         52      40000
+PC122               2        256         60         48      42000
+PC132               1        128        100         68      50000
+PC134               1        512         60         68      80000
+
+SQL> alter table pc modify(speed default 2);
+
+Table altered.
+
+SQL> insert into pc(model_no,ram,hd,cd,price) values('PC136',512,100,68,90000);
+
+1 row created.
+
+SQL> select * from pc;
+
+MODEL_NO        SPEED        RAM         HD         CD      PRICE
+---------- ---------- ---------- ---------- ---------- ----------
+PC112               2        256         60         52      40000
+PC122               2        256         60         48      42000
+PC132               1        128        100         68      50000
+PC134               1        512         60         68      80000
+PC136               2        512        100         68      90000
+
+****************************************************************
+
+3.Create suitable primary keys for all the tables of the above database schema
+a.Check if the primary keys are created successfully (User_Constraints table)
+
+SQL> alter table product_info add constraint pipk primary key(model_no);
+
+Table altered.
+
+SQL> desc product_info;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MAKER                                              VARCHAR2(10)
+ MODEL_NO                                  NOT NULL VARCHAR2(10)
+ TYPE                                      NOT NULL VARCHAR2(10)
+
+SQL> alter table pc add constraint pcpk primary key(model_no);
+
+Table altered.
+
+SQL> desc pc;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MODEL_NO                                  NOT NULL VARCHAR2(10)
+ SPEED                                              NUMBER(5)
+ RAM                                                NUMBER(5)
+ HD                                                 NUMBER(5)
+ CD                                                 NUMBER(5)
+ PRICE                                              NUMBER(7)
+
+SQL> alter table laptop add constraint ltpk primary key(model_no);
+
+Table altered.
+
+SQL> desc laptop;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MODEL_NO                                  NOT NULL VARCHAR2(10)
+ SPEED                                              NUMBER(5)
+ RAM                                                NUMBER(5)
+ HD                                                 NUMBER(5)
+ SCREENSIZE                                         NUMBER(5)
+ PRICE                                              NUMBER(7)
+
+SQL> alter table printer add constraint prpk primary key(model_no);
+
+Table altered.
+
+SQL> desc printer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MODEL_NO                                  NOT NULL VARCHAR2(10)
+ COLOR                                              VARCHAR2(5)
+ TYPE                                               VARCHAR2(5)
+ PRICE                                              NUMBER(7)
+
+SQL> select table_name,constraint_name,constraint_type from user_constraints;
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+LAPTOP                         LTPK                           P
+PC                             PCPK                           P
+PRINTER                        PRPK                           P
+PRODUCT_INFO                   SYS_C0034022                   C
+PRODUCT_INFO                   PIPK                           P
+ 
+****************************************************************
+
+4.Create suitable foreign keys for all the tables of the above database schema
+a.Check if the foreign keys are created successfully (User_Constraints table)
+SQL> alter table pc add constraint pcfk foreign key(model_no) references product_info(model_no);
+
+Table altered.
+
+SQL> alter table printer add constraint prfk foreign key(model_no) references product_info(model_no);
+
+Table altered.
+
+SQL> alter table laptop add constraint ltfk foreign key(model_no) references product_info(model_no);
+
+Table altered.
+
+SQL>select table_name,constraint_name,constraint_type from user_constraints;
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+LAPTOP                         LTPK                           P
+LAPTOP                         LTFK                           R
+PC                             PCPK                           P
+PC                             PCFK                           R
+PRINTER                        PRPK                           P
+PRINTER                        PRFK                           R
+PRODUCT_INFO                   SYS_C0034022                   C
+PRODUCT_INFO                   PIPK                           P
+
+b.Demonstrate the usage of On delete cascade
+
+SQL> alter table laptop add constraint ltfk foreign key(model_no) references product_info(model_no);
+
+Table altered.
+
+SQL> delete from product_info where model_no='LP133';
+delete from product_info where model_no='LP133'
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (CSE3E63.LTFK) violated - child record found
+
+SQL> alter table laptop add constraint ltfk foreign key(model_no) references product_info(model_no) on delete cascade;
+
+Table altered.
+
+SQL> delete from product_info where model_no='LP133';
+
+1 row deleted.
+
+SQL> select * from product_info;
+
+MAKER      MODEL_NO   TYPE
+---------- ---------- ----------
+HCL        PC112      PC
+HCL        LP113      LP
+ZENITH     PR114      PR
+WIPRO      PC122      PC
+WIPRO      LP123      LP
+WIPRO      PR124      PR
+IBM        PC134      PC
+HCL        LP114      LP
+IBM        PC132      PC
+IBM        PR134      PR
+
+10 rows selected.
+
+SQL> select * from laptop;
+
+MODEL_NO        SPEED        RAM         HD SCREENSIZE      PRICE
+---------- ---------- ---------- ---------- ---------- ----------
+LP113               1         64         40         14      59000
+LP123               2        128         60         16      72000
+LP114               2        128         40         17      45000
+
+5.Check Constraints:
+a.Apply a check constraint on the product_info table such that the only permitted values for the type column are ‘pc’, ‘lp’ and ‘pr’.
+
+SQL> alter table product_info add constraint pick check(type in('PR','PC','LP'));
+
+Table altered.
+
+SQL> select table_name,constraint_name,constraint_type from user_constraints;
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+LAPTOP                         LTPK                           P
+LAPTOP                         LTFK                           R
+PC                             PCPK                           P
+PC                             PCFK                           R
+PRINTER                        PRPK                           P
+PRINTER                        PRFK                           R
+PRODUCT_INFO                   SYS_C0034022                   C
+PRODUCT_INFO                   PIPK                           P
+PRODUCT_INFO                   PICK                           C
+
+b.Apply a check constraint such that the prices of pc, laptop and printer are all positive.
+
+SQL> alter table pc add constraint pcck check(price>0);
+
+Table altered.
+
+SQL> alter table laptop add constraint  ltck check(price>0);
+
+Table altered.
+
+SQL> alter table printer add constraint prck check(price>0);
+
+Table altered.
+
+SQL> insert into printer values('PR134','TRUE','DOT',-50000);
+insert into printer values('PR134','TRUE','DOT',-50000)
+*
+ERROR at line 1:
+ORA-02290: check constraint (CSE3E63.PRCK) violated
+
+c.Check if the check constraints are created successfully (User_Constraints table)
+
+SQL> select table_name,constraint_name,constraint_type from user_constraints;
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+LAPTOP                         LTPK                           P
+LAPTOP                         LTFK                           R
+LAPTOP                         LTCK                           C
+PC                             PCPK                           P
+PC                             PCFK                           R
+PC                             PCCK                           C
+PRINTER                        PRPK                           P
+PRINTER                        PRFK                           R
+PRINTER                        PRCK                           C
+PRODUCT_INFO                   SYS_C0034022                   C
+PRODUCT_INFO                   PIPK                           P
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+PRODUCT_INFO                   PICK                           C
+
+****************************************************************
+
+6.What are the different values for constraint_type in the user_constraints table and what is the meaning of each of those values?
+
+P – Primary Key
+R – Referential Integrity (Foreign Key)
+C – Check or Not Null constraint
+U – Unique Constraint
+
+7.Create a table named ‘Type_info’ with the columns model , type from  ProductInfo table ( Use the “create table yyy as select” construct )
+a.Initially no rows should be present in the dummy table
+
+SQL> create table type_info as select model_no, type from product_info where 1>2;
+
+Table created.
+
+SQL> desc type_info;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MODEL_NO                                           VARCHAR2(10)
+ TYPE                                      NOT NULL VARCHAR2(10)
+
+SQL> select * from type_info;
+
+no rows selected
+
+b.Insert all the rows from product_info into ‘Type_Info’ (only selected columns)
+
+SQL> insert into type_info select model_no,type from product_info;
+
+11 rows created.
+
+SQL> select * from type_info;
+
+MODEL_NO   TYPE
+---------- ----------
+PC112      PC
+LP113      LP
+PR114      PR
+PC122      PC
+LP123      LP
+PR124      PR
+PC134      PC
+LP114      LP
+PC132      PC
+PR134      PR
+PC136      PC
+
+11 rows selected.
+
+****************************************************************
+8.Modify the table printer by adding a column printercode of type varchar2(10) to identify the printer uniquely in the world.
+
+SQL> alter table printer add(printercode varchar2(10));
+
+Table altered.
+
+SQL> desc printer;
+          Name                                      Null?    Type
+         ----------------------------------------- -------- --------------------------
+         MODEL_NO                                  NOT NULL VARCHAR2(10)
+         COLOR                                              VARCHAR2(5)
+        TYPE                                               VARCHAR2(5)
+         PRICE                                              NUMBER(7)
+         PRINTERCODE                                        VARCHAR2(10)
+
+****************************************************************
+
+
+9.Add a Unique key constraint in the printercode column.
+a.Check if the unique key constraint is created successfully (User_Constraints table)
+
+
+SQL> alter table printer add constraint pruk unique(printercode);
+
+Table altered.
+
+
+SQL> select table_name,constraint_name,constraint_type from user_constraints;
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+LAPTOP                         LTPK                           P
+LAPTOP                         LTFK                           R
+LAPTOP                         LTCK                           C
+PC                             PCPK                           P
+PC                             PCFK                           R
+PC                             PCCK                           C
+PRINTER                        PRPK                           P
+PRINTER                        PRFK                           R
+PRINTER                        PRCK                           C
+PRINTER                        PRUK                           U
+PRODUCT_INFO                   SYS_C0034022                   C
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+PRODUCT_INFO                   PIPK                           P
+PRODUCT_INFO                   PICK                           C
+TYPE_INFO                      SYS_C0034038                   C
+
+14 rows selected.
+
+**************************************************************
+10.Increase the width of the column printercode by 2.
+
+SQL> desc printer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------
+ MODEL_NO                                  NOT NULL VARCHAR2(10)
+ COLOR                                              VARCHAR2(5)
+ TYPE                                               VARCHAR2(5)
+ PRICE                                              NUMBER(7)
+ PRINTERCODE                                        VARCHAR2(10)
+
+SQL> alter table printer modify(printercode varchar2(12));
+
+Table altered.
+
+SQL> desc printer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ---------------
+ MODEL_NO                                  NOT NULL VARCHAR2(10)
+ COLOR                                              VARCHAR2(5)
+ TYPE                                               VARCHAR2(5)
+ PRICE                                              NUMBER(7)
+ PRINTERCODE                                        VARCHAR2(12)
+
+****************************************************************
+
+
+11.Without removing the table definition from the database remove all the rows from the table ‘Type_info’.
+
+SQL> delete from type_info;
+
+11 rows deleted.
+
+SQL> desc type_info;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ---------------
+ MODEL_NO                                           VARCHAR2(10)
+ TYPE                                      NOT NULL VARCHAR2(10)
+
+****************************************************************
+
+12.Drop the table ‘type_info’ from the database.
+
+
+SQL> drop table type_info;
+
+Table dropped.
+
+SQL> desc type_info;
+ERROR:
+ORA-04043: object type_info does not exist

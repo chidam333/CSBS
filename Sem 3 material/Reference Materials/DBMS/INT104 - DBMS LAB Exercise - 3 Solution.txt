@@ -1,0 +1,45 @@
+1.List those rows of the table PC where RAM sizes are either ‘128’ or ‘256’ and the capacity of HD is greater than or equal to 50.
+select *  from pc where (ram=128 or ram=256) and hd>=50;
+
+2.List all the rows from PRINTER except the printers ‘pr112’ or ‘pr124’.
+select * from printer where model_no not in('PR112','PR124');
+
+3.List all the rows from LAPTOP in ascending and descending order of the screen size.
+select * from laptop order by screensize;
+
+4.List the makers of PC’s. Use ‘like’ operator in the model field (don’t use type).
+select maker from product_info where model_no like 'PC%';
+
+5.List the laptop details where the screen size is not 17.
+select * from laptop where screensize!=17;
+
+6.List the printers whose price is between 5000 and 10000. (Use between).
+select * from printer where price between 5000 and 10000;
+
+7.Display the PC details if we double the ram capacity. (Don’t update).
+select model_no,speed,2*ram,hd,cd,price from pc;
+
+8.Display the printer details with the following columnname as heading
+PRINTER       MODEL   COLORINFO    	PRINTERTYPE    PRICE      
+----------------  	---------	--------------    	--------------------- 
+select model_no as "PRINTER MODEL",color as "COLORINFO",  type as "PRINTERTYPE", price as "PRICE" from printer;
+
+9.Apply the following operations on WORKER and WORKERSKILL  tables 
+ UNION, UNION ALL , INTERSECTION & MINUS.
+ select name from worker union select name from workerskill;
+ select name from worker union all select name from workerskill;
+ select name from worker intersect select name from workerskill;
+ select name from worker minus select name from workerskill;
+
+10.For each value of RAM, list the number of PCs (use group by function).
+select ram,count(*) as PCs from pc group by ram;
+
+11. For each value of HD, list the number of PCs (use group by function).
+select hd,count(*) as PCs from pc group by hd;
+
+12.List the HD values for which the number of PCs is more than 2. (Use group by and 
+Having clause).
+select hd,count(*) as PCs from pc group by hd having count(hd)>2;
+
+
+

@@ -1,0 +1,48 @@
+Indexes, Sequences,Views and Synonyms
+
+1.Create a view Price_info to include the columns model, maker and price for the PCs.
+
+create view price_info as select a.model_no,a.maker,b.price from product_info a,pc b 
+where a.model_no=b.model_no and type = 'PC';
+
+2.Create a view Price6000 on the table PRINTER to include only rows with price > 20000. 
+  create view price20000 as select * from printer where price>20000;
+
+3.Modify one row in both the views and check whether it is reflected in the table and vice versa. 
+ 	MODIFYING IN VIEW
+		update price_info set price=50000 where model_no='PC122';
+	MODIFYING IN TABLE
+		update pc set price=55000 where model_no='PC112';
+
+4.Delete one row from the views. Record the observations. 
+	delete from price20000 where model_no='PR134';
+
+5.Create a unique index on the workername column of the worker table.
+create unique index sno on worker(name);
+
+6. Create a function based index on the city column of the worker table (Use upper, lower or initcap function and test)
+create index f1 on workerskill(upper(city));
+
+7.Create a sequence object in ascending order start with 100.
+create sequence s1 start with 100 increment by 5;
+
+8.Create a sequence object in descending order start with 100. 
+create sequence s2 start with 100 increment by -2 minvalue 0 maxvalue 100;
+
+9. Use the system variables currval, nextval to pick values from these sequences and demonstrate their usage in insert, update, delete and select statements 
+
+select s2.nextval from dual;
+select s2.currval from dual;
+create table student(rollno number(3));
+insert into student values(s1.currval);
+insert into student values(s2.currval);
+insert into student values(s2.nextval);
+insert into student values(s1.nextval);
+
+update student set rollno=s1.nextval where rollno=98;
+10.Create a synonym object for workerskill with the name ‘G20K’.
+	create synonym g20k for workerskill;
+	select * from g20k;
+
+
+	
